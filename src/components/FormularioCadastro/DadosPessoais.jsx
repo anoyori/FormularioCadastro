@@ -11,17 +11,27 @@ function FormularioCadastro({ aoEnviar, validacoes }) {
 
   function validarCampos(event) {
     const { name, value } = event.target;
-    const ehValido = validacoes[name](value);
     const novoEstado = { ...erros };
-    novoEstado[name] = ehValido;
+    novoEstado[name] = validacoes[name](value);
     setErros(novoEstado);
+  }
+
+  function formValid() {
+    for (let campo in erros) {
+      if (!erros[campo].valido) {
+        return false;
+      }
+    }
+    return true;
   }
 
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        aoEnviar({ nome, sobrenome, cpf, novidades, promocoes });
+        if (formValid()) {
+          aoEnviar({ nome, sobrenome, cpf, novidades, promocoes });
+        }
       }}
     >
       <TextField
